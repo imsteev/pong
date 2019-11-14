@@ -15,8 +15,6 @@ def home():
 
 @app.route('/game', methods=["GET", "POST"])
 def game():
-    if IS_POST():
-        print(request.)
 
     return "Hello, time to play ping pong"
 
