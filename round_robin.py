@@ -37,31 +37,20 @@ class Circle:
         return self.circle.popleft() if self.circle else None
 
 
-def format_matchup(p1, p2, dummy_player):
-    if p1 == dummy_player:
-        return "BYE", p2
-    elif p2 == dummy_player:
-        return "BYE", p1
-    else:
-        return min(p1, p2), max(p1, p2)
-
-
 def round_robin(n):
     """
     https://en.wikipedia.org/wiki/Round-robin_tournament
 
-    Create a round-robin schedule for n players.
+    Generator for a round-robin schedule for n players.
     If n is odd, there will be matchups with BYEs for each round.
+    Each iteration will return a tuple of (matchups, dummy_player)
     """
     if n < 2:
         print("No round robin exists for schedule with less than two players")
         return
 
     # normalize to even amount of players
-    dummy_player = None
-    if n % 2 == 1:
-        n += 1
-        dummy_player = n
+    n = n if n % 2 == 0 else n + 1
 
     # construct rotatable circle with everyone but first player
     circle = Circle(list(range(2, n+1)))
@@ -74,7 +63,7 @@ def round_robin(n):
 
         for i in range(n//2):
             p1, p2 = circle[i], circle[n-1-i]  # play the person "opposite" of you in the circle
-            matchup = format_matchup(p1, p2, dummy_player)
+            matchup = min(p1, p2), max(p1, p2)
             round.append(matchup)
 
         yield round
