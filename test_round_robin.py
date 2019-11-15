@@ -2,17 +2,24 @@ import round_robin
 
 
 def test_rotate_empty():
-    res = round_robin.rotate([])
-    assert res == []
+    circle = round_robin.Circle([])
+    circle.rotate([])
+    assert len(circle) == 0
 
 
 def test_rotate_clockwise():
-    A = [1, 2, 3]
-    res = round_robin.rotate(A)
-    assert res == [3, 1, 2]
+    circle = round_robin.Circle([1, 2, 3])
+    circle.rotate()
+    assert len(circle) == 3
+    assert circle[0] == 3
+    assert circle[1] == 1
+    assert circle[2] == 2
 
 
 def test_rotate_counter_clockwise():
-    A = [1, 2, 3]
-    res = round_robin.rotate(A, clockwise=False)
-    assert res == [2, 3, 1]
+    circle = round_robin.Circle([1, 2, 3])
+    circle.rotate(clockwise=False)
+    assert len(circle) == 3
+    assert circle[0] == 2
+    assert circle[1] == 3
+    assert circle[2] == 1
