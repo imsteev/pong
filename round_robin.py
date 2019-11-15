@@ -42,8 +42,8 @@ def round_robin(n):
     https://en.wikipedia.org/wiki/Round-robin_tournament
 
     Generator for a round-robin schedule for n players.
-    If n is odd, there will be matchups with BYEs for each round.
-    Each iteration will return a tuple of (matchups, dummy_player)
+    If n is odd, a dummy player will be introduced as player (n+1).
+    Each iteration will yield a list of tuple matchups (p1, p2).
     """
     if n < 2:
         print("No round robin exists for schedule with less than two players")
@@ -74,6 +74,9 @@ def round_robin(n):
 
 
 if __name__ == "__main__":
+    NUM_PLAYERS = 7  # adjust this accordingly
+    DUMMY_PLAYER = {"rank": '-', 'name': "BYE"}
+
     players = [{"rank": 1, "name": "Michael Gary Scott"},
                {"rank": 2, "name": "Jim Halpert"},
                {"rank": 3, "name": "Pam Beasley"},
@@ -85,11 +88,17 @@ if __name__ == "__main__":
 
     players.sort(key=lambda info: info['rank'])
 
-    # TODO: need to address representation when there are odd number of players
-    for i, round in enumerate(round_robin(len(players)), 1):
+    for i, round in enumerate(round_robin(NUM_PLAYERS), 1):
         print("ROUND {}".format(i))
         for (p1, p2) in round:
-            player1 = players[p1-1]
-            player2 = players[p2-1]
+            # players are ranked starting from 1
+            if 0 <= p1 - 1 < NUM_PLAYERS:
+                player1 = players[p1-1]
+            else:
+                player1 = DUMMY_PLAYER
+            if 0 <= p2 - 1 < NUM_PLAYERS:
+                player2 = players[p2-1]
+            else:
+                player2 = DUMMY_PLAYER
             print("{0} ({1}) v. {2} ({3})".format(player1['name'], player1['rank'], player2['name'], player2['rank']))
         print()
