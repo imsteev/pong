@@ -46,4 +46,4 @@ def test_even_round_robin_everyone_plays_each_other():
     assert len(counts) == num_players
     for p in counts:
         assert len(counts[p]) == num_players - 1
-        assert p not in counts[p]
+        assert p not in counts[p]  # make sure players don't play themselves!
