@@ -74,5 +74,22 @@ def round_robin(n):
 
 
 if __name__ == "__main__":
-    for i, round in enumerate(round_robin(10), 1):
-        print("ROUND {0}: {1}".format(i, round))
+    players = [{"rank": 1, "name": "Michael Gary Scott"},
+               {"rank": 2, "name": "Jim Halpert"},
+               {"rank": 3, "name": "Pam Beasley"},
+               {"rank": 4, "name": "Kevin Malone"},
+               {"rank": 5, "name": "Phyllis Vance"},
+               {"rank": 6, "name": "Dwight Schrute"},
+               {"rank": 7, "name": "Robert California"},
+               {"rank": 8, "name": "Kelly Kapoor"}]
+
+    players.sort(key=lambda info: info['rank'])
+
+    # TODO: need to address representation when there are odd number of players
+    for i, round in enumerate(round_robin(len(players)), 1):
+        print("ROUND {}".format(i))
+        for (p1, p2) in round:
+            player1 = players[p1-1]
+            player2 = players[p2-1]
+            print("{0} ({1}) v. {2} ({3})".format(player1['name'], player1['rank'], player2['name'], player2['rank']))
+        print()
