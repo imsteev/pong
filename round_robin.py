@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import deque
 
 
 def rotate(L, clockwise=True):
@@ -22,11 +22,11 @@ def round_robin(n):
     matchups = []
 
     # Construct rotatable circle with everyone but first player
-    circle = list(range(2, n+1))
+    circle = deque(list(range(2, n+1)))
 
     for _ in range(n-1):
         group = []
-        circle.insert(0, 1)  # fix the first player in the circle
+        circle.appendleft(1)  # fix the first player in the circle
         for i in range(n // 2):
             p1, p2 = circle[i], circle[n-1-i]
             if p1 == bye_num:
@@ -34,7 +34,7 @@ def round_robin(n):
             if p2 == bye_num:
                 p2 = "BYE"
             group.append((p1, p2))
-        circle.pop(0)
+        circle.popleft()
         matchups.append(group)
         circle = rotate(circle)
 
