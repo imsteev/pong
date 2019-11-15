@@ -3,7 +3,6 @@ import requests
 
 from flask import Flask, request
 
-from request_helpers import IS_GET, IS_POST
 
 app = Flask('ping-pong')
 
