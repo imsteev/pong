@@ -1,3 +1,4 @@
+from collections import defaultdict
 import round_robin
 
 
@@ -33,16 +34,13 @@ def test_round_robin_invalid_players():
 
 def test_even_round_robin_everyone_plays_each_other():
     num_players = 10
-    counts = {}
+    counts = defaultdict(set)
     for round in round_robin.round_robin(num_players):
         for p1, p2 in round:
-            if p1 not in counts:
-                counts[p1] = set()
-            if p2 not in counts:
-                counts[p2] = set()
             counts[p1].add(p2)
             counts[p2].add(p1)
 
+    assert num_players % 2 == 0
     assert len(counts) == num_players
     for p in counts:
         assert len(counts[p]) == num_players - 1
@@ -51,21 +49,20 @@ def test_even_round_robin_everyone_plays_each_other():
 
 def test_odd_round_robin_everyone_plays_each_other():
     num_players = 11
-    counts = {}
+    counts = defaultdict(set)
     for round in round_robin.round_robin(num_players):
         for p1, p2 in round:
-            if p1 not in counts:
-                counts[p1] = set()
-            if p2 not in counts:
-                counts[p2] = set()
             counts[p1].add(p2)
             counts[p2].add(p1)
 
+    assert num_players % 2 == 1
     assert len(counts) == num_players + 1  # new "dummy" player introduced
     dummy_player = len(counts)
     for p in counts:
-        if p != dummy_player:
-            if dummy_player in counts[p]:
-                counts[p].remove(dummy_player)
-            assert len(counts[p]) == num_players - 1
-            assert p not in counts[p]  # make sure players don't play themselves
+        if p == dummy_player:
+            # TODO: should we be able to reason about the number of byes?
+            continue
+        if dummy_player in counts[p]:
+            counts[p].remove(dummy_player)
+        assert len(counts[p]) == num_players - 1
+        assert p not in counts[p]  # make sure players don't play themselves
