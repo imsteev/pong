@@ -53,7 +53,7 @@ def round_robin(n):
     n = n if n % 2 == 0 else n + 1
 
     # construct rotatable circle with everyone but first player
-    circle = Circle(list(range(2, n+1)))
+    circle = Circle(range(2, n+1))
 
     for _ in range(n-1):
         round = []
