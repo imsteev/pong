@@ -8,6 +8,6 @@ install:
 jobs:
   include:
     - stage: test
-      script: pycodestyle .
+      script: pycodestyle --max-line-length=100 .
     - # stage name not required, will continue to use `test`
       script: pytest

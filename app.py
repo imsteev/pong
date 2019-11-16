@@ -28,8 +28,8 @@ def index():
     if ROUND_ROBIN_GENERATOR is not None:
         try:
             matchups = get_matchups(next(ROUND_ROBIN_GENERATOR), PLAYER_POOL)
-            matchups_str = '\n'.join(["{0} ({1}) v. {2} ({3})".format(p1.name, p1_seed, p2.name, p2_seed)
-                                      for ((p1, p1_seed), (p2, p2_seed)) in matchups])
+            matchups_str = '\n'.join(["{0} ({1}) v. {2} ({3})".format(
+                p1.name, p1_seed, p2.name, p2_seed) for ((p1, p1_seed), (p2, p2_seed)) in matchups])
             CURRENT_ROUND += 1
         except StopIteration:
             CURRENT_ROUND = 0

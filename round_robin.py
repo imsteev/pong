@@ -88,7 +88,7 @@ def get_matchups(round, players):
     @round (List[tuple]): matchups between two player numbers. Lower number means higher seeded
     @players (List[Player])
     """
-    seeded_players = sorted(players, key=lambda p: -p.rating)  # sort players by rating, highest to lowest
+    seeded_players = sorted(players, key=lambda p: -p.rating)  # sort players highest to lowest
     matchups = []
     for (p1, p2) in round:
         if 0 <= p1 - 1 < len(seeded_players):
