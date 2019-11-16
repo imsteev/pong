@@ -4,6 +4,12 @@ import round_robin
 Player = namedtuple('Player', 'name rating')
 
 
+def test_round_robin_invalid_players():
+    for i in range(-1, 2):
+        matchups = list(round_robin.round_robin(i))
+        assert matchups == []
+
+
 def test_even_round_robin_everyone_plays_each_other():
     # Arrange
     num_players = 10
