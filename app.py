@@ -14,62 +14,55 @@ DEFAULT_PORT = 8888
 
 app = Flask(__name__)
 
-PLAYER_POOL = None
-ROUND_ROBIN_GENERATOR = None
-CURRENT_ROUND = 0
-CURRENT_MATCHUPS = None
+CACHE = dict()
+CACHE['pool'] = None  # pool of Players
+CACHE['round_robin'] = None
+CACHE['current_round'] = None
+CACHE['current_round_num'] = 0
 
 
 @app.route('/', methods=['GET'])
 def index():
-    global CURRENT_MATCHUPS
-    global CURRENT_ROUND
-    global PLAYER_POOL
-    global ROUND_ROBIN_GENERATOR
+    global CACHE
 
-    if CURRENT_MATCHUPS:
+    if CACHE['current_round']:
         matchups_str = '\n'.join(
             ["{0} ({1}) v. {2} ({3})".format(p1.name, p1_seed, p2.name, p2_seed)
-             for ((p1, p1_seed), (p2, p2_seed)) in CURRENT_MATCHUPS])
-        return f"""Round {CURRENT_ROUND}
+             for ((p1, p1_seed), (p2, p2_seed)) in CACHE['current_round']])
+        return f"""Round {CACHE['current_round_num']}
         {matchups_str}"""
     else:
-        CURRENT_ROUND = 0
+        CACHE['current_round_num'] = 0
         return "No matchups. Reset the tournament or start a new one!"
 
 
 @app.route('/tournament', methods=['GET', 'POST'])
 def tournament():
-    global PLAYER_POOL
-    global ROUND_ROBIN_GENERATOR
-    if ROUND_ROBIN_GENERATOR is None:
-        PLAYER_POOL = [Player(**p) for p in request.get_json()]
-        ROUND_ROBIN_GENERATOR = round_robin(len(PLAYER_POOL))
-    return jsonify(PLAYER_POOL)
+    global CACHE
+    if CACHE['round_robin'] is None:
+        CACHE['pool'] = [Player(**p) for p in request.get_json()]
+        CACHE['round_robin'] = round_robin(len(CACHE['pool']))
+    return jsonify(CACHE['pool'])
 
 
 @app.route('/next_round', methods=['GET'])
 def next_round():
-    global CURRENT_MATCHUPS
-    global CURRENT_ROUND
-    global ROUND_ROBIN_GENERATOR
-    if ROUND_ROBIN_GENERATOR is not None:
+    global CACHE
+    if CACHE['round_robin']:
         try:
-            CURRENT_MATCHUPS = construct_matchups(next(ROUND_ROBIN_GENERATOR), PLAYER_POOL)
-            CURRENT_ROUND += 1
+            CACHE['current_round'] = construct_matchups(next(CACHE['round_robin']), CACHE['pool'])
+            CACHE['current_round_num'] += 1
         except StopIteration:
-            CURRENT_MATCHUPS = None
+            CACHE['current_round'] = None
     return redirect(url_for('index'))
 
 
 @app.route('/reset', methods=['GET'])
 def reset():
-    global CURRENT_ROUND
-    global PLAYER_POOL
-    global ROUND_ROBIN_GENERATOR
-    CURRENT_ROUND = 0
-    PLAYER_POOL = None
-    ROUND_ROBIN_GENERATOR = None
+    global CACHE
+    CACHE['round_robin'] = None
+    CACHE['current_round'] = None
+    CACHE['current_round_num'] = 0
     return redirect(url_for('index'))
 
 
