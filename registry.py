@@ -7,4 +7,4 @@ class Player:
     rating: int = 0
 
 
-DUMMY_PLAYER = Player(name="BYE")
+BYE = Player(name="BYE")

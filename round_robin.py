@@ -1,7 +1,7 @@
 from collections import deque
 from typing import Iterable
 
-from registry import DUMMY_PLAYER
+from registry import BYE
 
 
 class Circle:
@@ -95,13 +95,13 @@ def get_matchups(round, players):
             player1 = seeded_players[p1-1]
             p1_seed = p1
         else:
-            player1 = DUMMY_PLAYER
+            player1 = BYE
             p1_seed = '-'
         if 0 <= p2 - 1 < len(seeded_players):
             player2 = seeded_players[p2-1]
             p2_seed = p2
         else:
-            player2 = DUMMY_PLAYER
+            player2 = BYE
             p2_seed = '-'
         matchups.append(((player1, p1_seed), (player2, p2_seed)))
     return matchups
@@ -110,7 +110,7 @@ def get_matchups(round, players):
 if __name__ == "__main__":
     import pandas as pd
     import random
-    from registry import DUMMY_PLAYER, Player
+    from registry import BYE, Player
 
     with open('./files/the_office.csv') as f:
         df = pd.read_csv(f, delimiter=',')
