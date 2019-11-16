@@ -1,5 +1,7 @@
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 import round_robin
+
+Player = namedtuple('Player', 'name rating')
 
 
 def test_rotate_empty():
@@ -66,3 +68,37 @@ def test_odd_round_robin_everyone_plays_each_other():
             counts[p].remove(dummy_player)
         assert len(counts[p]) == num_players - 1
         assert p not in counts[p]  # make sure players don't play themselves
+
+
+def test_get_matchups_returns_seeded_players_by_rating():
+    players = [
+        Player(name='Picolo', rating=600),
+        Player(name='Trunks', rating=700),
+        Player(name='Vegeta', rating=900),
+        Player(name='Goten', rating=500),
+        Player(name='Goku', rating=1000),
+        Player(name='Gohan', rating=800),
+    ]
+    round = [(1, 2), (3, 4), (5, 6)]
+
+    matchups = round_robin.get_matchups(round, players)
+
+    assert len(matchups) == 3
+
+    matchup1 = matchups[0]  # 1 vs 2
+    assert matchup1[0][1] == 1
+    assert matchup1[1][1] == 2
+    assert matchup1[0][0].name == 'Goku'
+    assert matchup1[1][0].name == 'Vegeta'
+
+    matchup2 = matchups[1]  # 3 vs 4
+    assert matchup2[0][1] == 3
+    assert matchup2[1][1] == 4
+    assert matchup2[0][0].name == 'Gohan'
+    assert matchup2[1][0].name == 'Trunks'
+
+    matchup3 = matchups[2]  # 5 vs 6
+    assert matchup3[0][1] == 5
+    assert matchup3[1][1] == 6
+    assert matchup3[0][0].name == 'Picolo'
+    assert matchup3[1][0].name == 'Goten'

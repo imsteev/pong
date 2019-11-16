@@ -92,13 +92,13 @@ def get_matchups(round, players):
     matchups = []
     for (p1, p2) in round:
         if 0 <= p1 - 1 < len(seeded_players):
-            player1 = players[p1-1]
+            player1 = seeded_players[p1-1]
             p1_seed = p1
         else:
             player1 = DUMMY_PLAYER
             p1_seed = '-'
         if 0 <= p2 - 1 < len(seeded_players):
-            player2 = players[p2-1]
+            player2 = seeded_players[p2-1]
             p2_seed = p2
         else:
             player2 = DUMMY_PLAYER
