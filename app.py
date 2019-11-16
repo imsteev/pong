@@ -7,7 +7,7 @@ import os
 from flask import Flask, jsonify, redirect, request, url_for
 
 from registry import Player
-from round_robin import round_robin
+from round_robin import get_matchups, round_robin
 
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 8888
@@ -22,16 +22,24 @@ CURRENT_ROUND = 0
 @app.route('/', methods=['GET'])
 def index():
     global CURRENT_ROUND
+    global PLAYER_POOL
     global ROUND_ROBIN_GENERATOR
-    matchups = "No players registered"
+    matchups_str = "No players registered"
     if ROUND_ROBIN_GENERATOR is not None:
         try:
-            matchups = next(ROUND_ROBIN_GENERATOR)
+            matchups = get_matchups(next(ROUND_ROBIN_GENERATOR), PLAYER_POOL)
+            matchups_str = '\n'.join(["{0} ({1}) v. {2} ({3})".format(p1.name, p1_seed, p2.name, p2_seed)
+                                      for ((p1, p1_seed), (p2, p2_seed)) in matchups])
             CURRENT_ROUND += 1
         except StopIteration:
-            matchups = "Tournament finished!"
+            CURRENT_ROUND = 0
+            matchups_str = "Tournament finished!"
 
-    return f"Round {CURRENT_ROUND}: {matchups}"
+    if CURRENT_ROUND == 0:
+        return matchups_str
+    else:
+        return f"""Round {CURRENT_ROUND}
+        {matchups_str}"""
 
 
 @app.route('/tournament', methods=['GET', 'POST'])

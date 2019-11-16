@@ -1,6 +1,8 @@
 from collections import deque
 from typing import Iterable
 
+from registry import DUMMY_PLAYER
+
 
 class Circle:
     """
@@ -79,6 +81,25 @@ def round_robin(n):
         circle.rotate()
 
 
+def get_matchups(round, players):
+    matchups = []
+    for (p1, p2) in round:
+        if 0 <= p1 - 1 < len(players):
+            player1 = players[p1-1]
+            p1_seed = p1
+        else:
+            player1 = DUMMY_PLAYER
+            p1_seed = '-'
+        if 0 <= p2 - 1 < len(players):
+            player2 = players[p2-1]
+            p2_seed = p2
+        else:
+            player2 = DUMMY_PLAYER
+            p2_seed = '-'
+        matchups.append(((player1, p1_seed), (player2, p2_seed)))
+    return matchups
+
+
 if __name__ == "__main__":
     import pandas as pd
     import random
@@ -97,23 +118,7 @@ if __name__ == "__main__":
     num_players = len(players)
     for i, round in enumerate(round_robin(num_players), 1):
         print("ROUND {}".format(i))
-        for (p1, p2) in round:
-
-            # get player 1
-            if 0 <= p1 - 1 < num_players:
-                player1 = players[p1-1]
-                p1_seed = p1
-            else:
-                player1 = DUMMY_PLAYER
-                p1_seed = "-"
-
-            # get player 2
-            if 0 <= p2 - 1 < num_players:
-                player2 = players[p2-1]
-                p2_seed = p2
-            else:
-                player2 = DUMMY_PLAYER
-                p2_seed = "-"
-
-            print("{0} ({1}) v. {2} ({3})".format(player1.name, p1_seed, player2.name, p2_seed))
+        matchups = get_matchups(round, players)
+        for ((p1, p1_seed), (p2, p2_seed)) in matchups:
+            print("{0} ({1}) v. {2} ({3})".format(p1.name, p1_seed, p2.name, p2_seed))
         print()
