@@ -67,3 +67,7 @@ def construct_matchups(round, players):
             p2_seed = '-'
         matchups.append(((player1, p1_seed), (player2, p2_seed)))
     return matchups
+
+
+def format_matchup(p1, p1_seed, p2, p2_seed):
+    return "{0} ({1}) v. {2} ({3})".format(p1.name, p1_seed, p2.name, p2_seed)

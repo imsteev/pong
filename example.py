@@ -1,5 +1,5 @@
 if __name__ == "__main__":
-    from round_robin import construct_matchups, round_robin
+    from round_robin import construct_matchups, format_matchup, round_robin
     import pandas as pd
     import random
     from models.player import Player
@@ -18,5 +18,5 @@ if __name__ == "__main__":
         print("ROUND {}".format(i))
         matchups = construct_matchups(round, players)
         for ((p1, p1_seed), (p2, p2_seed)) in matchups:
-            print("{0} ({1}) v. {2} ({3})".format(p1.name, p1_seed, p2.name, p2_seed))
+            print(format_matchup(p1, p1_seed, p2, p2_seed))
         print()
