@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>My first Vue app</title>
+  <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+  <div id="app">
+    Current registered players: {{ players }}
+  </div>
+
+  <script>
+    let players = null
+
+    let app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!',
+        players: players
+      },
+      created() {
+        fetch('/players')
+          .then(res => res.json())
+          .then(data => app.players = data)
+      }
+    })
+  </script>
+</body>
+
+</html>
