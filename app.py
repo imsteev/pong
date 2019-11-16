@@ -1,3 +1,6 @@
+"""
+Simple Flask server that can host a single round-robin tournament (in-memory, for now).
+"""
 import json
 import os
 
@@ -13,28 +16,22 @@ app = Flask(__name__)
 
 PLAYER_POOL = None
 ROUND_ROBIN_GENERATOR = None
+CURRENT_ROUND = 0
 
 
 @app.route('/', methods=['GET'])
 def index():
+    global CURRENT_ROUND
     global ROUND_ROBIN_GENERATOR
-    current_round = None
+    matchups = "No players registered"
     if ROUND_ROBIN_GENERATOR is not None:
         try:
-            current_round = next(ROUND_ROBIN_GENERATOR)
+            matchups = next(ROUND_ROBIN_GENERATOR)
+            CURRENT_ROUND += 1
         except StopIteration:
-            current_round = "Tournament finished!"
+            matchups = "Tournament finished!"
 
-    return f"Current round: {current_round}"
-
-
-@app.route('/reset', methods=['GET'])
-def reset():
-    global PLAYER_POOL
-    global ROUND_ROBIN_GENERATOR
-    PLAYER_POOL = None
-    ROUND_ROBIN_GENERATOR = None
-    return redirect(url_for('index'))
+    return f"Round {CURRENT_ROUND}: {matchups}"
 
 
 @app.route('/tournament', methods=['GET', 'POST'])
@@ -45,6 +42,17 @@ def tournament():
         PLAYER_POOL = [Player(**p) for p in request.get_json()]
         ROUND_ROBIN_GENERATOR = round_robin(len(PLAYER_POOL))
     return jsonify(PLAYER_POOL)
+
+
+@app.route('/reset', methods=['GET'])
+def reset():
+    global CURRENT_ROUND
+    global PLAYER_POOL
+    global ROUND_ROBIN_GENERATOR
+    CURRENT_ROUND = 0
+    PLAYER_POOL = None
+    ROUND_ROBIN_GENERATOR = None
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
