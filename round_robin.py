@@ -80,40 +80,40 @@ def round_robin(n):
 
 
 if __name__ == "__main__":
-    from dataclasses import dataclass
-    @dataclass
-    class Player:
-        rank: int = "-"
-        name: str = "BYE"
+    import pandas as pd
+    import random
+    from registry import DUMMY_PLAYER, Player
 
-    NUM_PLAYERS = 6  # adjust this accordingly
-    DUMMY_PLAYER = Player()
+    with open('./players/the_office.csv') as f:
+        df = pd.read_csv(f, delimiter=',')
 
-    players = [Player(rank=1, name='Michael Gary Scott'),
-               Player(rank=2, name='Dwight K. Schrute'),
-               Player(rank=3, name='Jim Halpert'),
-               Player(rank=4, name='Pam Beasley'),
-               Player(rank=5, name='Oscar Martinez'),
-               Player(rank=6, name='Phyllis Vance, Vance Refrigeration'),
-               Player(rank=7, name='Angela Martin'),
-               Player(rank=8, name='Stanley Hudson'),
-               Player(rank=9, name='Kelly Kapoor'),
-               Player(rank=10, name='Ryan Howard'),
-               Player(rank=11, name='Robert California')]
+    pool = [Player(**p) for _, p in df.iterrows()]
 
-    players.sort(key=lambda p: p.rank)
+    # get 5 random players
+    random.shuffle(pool)
+    players = pool[:5]
+    players.sort(key=lambda p: -p.rating)  # sort the players by rating, highest to lowest
 
-    for i, round in enumerate(round_robin(NUM_PLAYERS), 1):
+    num_players = len(players)
+    for i, round in enumerate(round_robin(num_players), 1):
         print("ROUND {}".format(i))
         for (p1, p2) in round:
-            # players are ranked starting from 1
-            if 0 <= p1 - 1 < NUM_PLAYERS:
+
+            # get player 1
+            if 0 <= p1 - 1 < num_players:
                 player1 = players[p1-1]
+                p1_seed = p1
             else:
                 player1 = DUMMY_PLAYER
-            if 0 <= p2 - 1 < NUM_PLAYERS:
+                p1_seed = "-"
+
+            # get player 2
+            if 0 <= p2 - 1 < num_players:
                 player2 = players[p2-1]
+                p2_seed = p2
             else:
                 player2 = DUMMY_PLAYER
-            print("{0} ({1}) v. {2} ({3})".format(player1.name, player1.rank, player2.name, player2.rank))
+                p2_seed = "-"
+
+            print("{0} ({1}) v. {2} ({3})".format(player1.name, p1_seed, player2.name, p2_seed))
         print()
