@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Player:
-    name: str = "BYE"
+    name: str = ""
     rating: int = 0
 
 
-DUMMY_PLAYER = Player()
+DUMMY_PLAYER = Player(name="BYE")
