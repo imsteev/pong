@@ -112,7 +112,7 @@ if __name__ == "__main__":
     import random
     from registry import DUMMY_PLAYER, Player
 
-    with open('./players/the_office.csv') as f:
+    with open('./files/the_office.csv') as f:
         df = pd.read_csv(f, delimiter=',')
 
     pool = [Player(**p) for _, p in df.iterrows()]
