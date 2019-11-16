@@ -4,36 +4,6 @@ import round_robin
 Player = namedtuple('Player', 'name rating')
 
 
-def test_rotate_empty():
-    circle = round_robin.Circle([])
-    circle.rotate([])
-    assert len(circle) == 0
-
-
-def test_rotate_clockwise():
-    circle = round_robin.Circle([1, 2, 3])
-    circle.rotate()
-    assert len(circle) == 3
-    assert circle[0] == 3
-    assert circle[1] == 1
-    assert circle[2] == 2
-
-
-def test_rotate_counter_clockwise():
-    circle = round_robin.Circle([1, 2, 3])
-    circle.rotate(clockwise=False)
-    assert len(circle) == 3
-    assert circle[0] == 2
-    assert circle[1] == 3
-    assert circle[2] == 1
-
-
-def test_round_robin_invalid_players():
-    for i in range(2):
-        matchups = list(round_robin.round_robin(i))
-        assert matchups == []
-
-
 def test_even_round_robin_everyone_plays_each_other():
     # Arrange
     num_players = 10
@@ -78,7 +48,7 @@ def test_odd_round_robin_everyone_plays_each_other():
         assert p not in counts[p]  # make sure players don't play themselves
 
 
-def test_get_matchups_returns_seeded_players_by_rating():
+def test_construct_matchups_returns_seeded_players_by_rating():
     # Arrange
     round = [(1, 2), (3, 4), (5, 6)]
     players = [Player(name='Picolo', rating=600),
@@ -89,7 +59,7 @@ def test_get_matchups_returns_seeded_players_by_rating():
                Player(name='Gohan', rating=800)]
 
     # Act
-    result = round_robin.get_matchups(round, players)
+    result = round_robin.construct_matchups(round, players)
 
     # Assert
     assert len(result) == 3

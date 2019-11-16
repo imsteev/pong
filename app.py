@@ -6,8 +6,8 @@ import os
 
 from flask import Flask, jsonify, redirect, request, url_for
 
-from registry import Player
-from round_robin import get_matchups, round_robin
+from models.player import Player
+from round_robin import construct_matchups, round_robin
 
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 8888
@@ -55,7 +55,7 @@ def next_round():
     global ROUND_ROBIN_GENERATOR
     if ROUND_ROBIN_GENERATOR is not None:
         try:
-            CURRENT_MATCHUPS = get_matchups(next(ROUND_ROBIN_GENERATOR), PLAYER_POOL)
+            CURRENT_MATCHUPS = construct_matchups(next(ROUND_ROBIN_GENERATOR), PLAYER_POOL)
             CURRENT_ROUND += 1
         except StopIteration:
             CURRENT_MATCHUPS = None
