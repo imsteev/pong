@@ -82,15 +82,22 @@ def round_robin(n):
 
 
 def get_matchups(round, players):
+    """
+    Returns list of tuple of tuples [((p1, p1_seed), (p2, p2_seed))...]
+
+    @round (List[tuple]): matchups between two player numbers. Lower number means higher seeded
+    @players (List[Player])
+    """
+    seeded_players = sorted(players, key=lambda p: -p.rating)  # sort players by rating, highest to lowest
     matchups = []
     for (p1, p2) in round:
-        if 0 <= p1 - 1 < len(players):
+        if 0 <= p1 - 1 < len(seeded_players):
             player1 = players[p1-1]
             p1_seed = p1
         else:
             player1 = DUMMY_PLAYER
             p1_seed = '-'
-        if 0 <= p2 - 1 < len(players):
+        if 0 <= p2 - 1 < len(seeded_players):
             player2 = players[p2-1]
             p2_seed = p2
         else:
@@ -113,7 +120,6 @@ if __name__ == "__main__":
     # get 5 random players
     random.shuffle(pool)
     players = pool[:5]
-    players.sort(key=lambda p: -p.rating)  # sort the players by rating, highest to lowest
 
     num_players = len(players)
     for i, round in enumerate(round_robin(num_players), 1):
