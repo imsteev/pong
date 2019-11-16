@@ -1,4 +1,5 @@
 from collections import deque
+from typing import Iterable
 
 
 class Circle:
@@ -7,8 +8,8 @@ class Circle:
     Supports direct indexing and the ability to rotate clockwise or counterclockwise.
     """
 
-    def __init__(self, L):
-        self.circle = deque(L or [])
+    def __init__(self, A: Iterable):
+        self.circle = deque(A or [])
 
     def __len__(self):
         return len(self.circle)
@@ -17,7 +18,6 @@ class Circle:
         """
         Return i-th element of the circle, where 0-th element is at 12 o'clock
         """
-        # TODO: safety checks
         return self.circle[i]
 
     def rotate(self, clockwise=True):
@@ -30,10 +30,16 @@ class Circle:
             first = self.circle.popleft()
             self.circle.append(first)
 
-    def insert_beginning(self, x):
+    def insert_head(self, x):
+        """
+        Inserts item at the head of the queue. In the circle, it is the item at 12 o'clock
+        """
         self.circle.appendleft(x)
 
-    def remove_beginning(self):
+    def remove_head(self):
+        """
+        Removes head from the queue.
+        """
         return self.circle.popleft() if self.circle else None
 
 
@@ -59,7 +65,7 @@ def round_robin(n):
         round = []
 
         # fix the first player in the circle
-        circle.insert_beginning(1)
+        circle.insert_head(1)
 
         for i in range(n//2):
             p1, p2 = circle[i], circle[n-1-i]  # play the person "opposite" of you in the circle
@@ -69,7 +75,7 @@ def round_robin(n):
         yield round
 
         # rotate everyone else but the first player
-        circle.remove_beginning()
+        circle.remove_head()
         circle.rotate()
 
 
