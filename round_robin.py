@@ -71,3 +71,40 @@ def construct_matchups(round, players):
 
 def format_matchup(p1, p1_seed, p2, p2_seed):
     return "{0} ({1}) v. {2} ({3})".format(p1.name, p1_seed, p2.name, p2_seed)
+
+
+if __name__ == "__main__":
+    print()
+    print('Welcome to the Pong terminal! Here you can set up a round robin tournament')
+    print('Register players with their name and rating, if applicable')
+    print('Type DONE at any moment when you\'re all finished (case sensitive)')
+    print('At the end, ')
+    name_and_ratings = set()
+    while True:
+        print()
+        name = input('Enter player name: ').strip()
+        if name == "DONE":
+            break
+        rating = input('Enter their rating, if applicable: ')
+        if rating == "DONE":
+            break
+        try:
+            rating = int(rating)
+        except:
+            rating = None
+
+        if not name or not rating:
+            break
+
+        name_and_ratings.add((name.strip(), rating))
+
+    players = []
+    for (name, rating) in name_and_ratings:
+        players.append(Player(name=name, rating=rating))
+
+    rr = round_robin(len(players))
+    for i, round in enumerate(rr, 1):
+        print(f"ROUND {i}")
+        for ((p1, p1_seed), (p2, p2_seed)) in construct_matchups(round, players):
+            print(format_matchup(p1, p1_seed, p2, p2_seed))
+        print()
