@@ -1,42 +1,20 @@
-import os
 import sqlite3
 
 DB_PATH = '/tmp/pong.db'
 
+PLAYER_TABLE_CREATE = """
+CREATE TABLE IF NOT EXISTS player (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    rating INTEGER
+)
+"""
 
-def create_db():
-    should_create = False
-    if os.path.exists(DB_PATH):
-        confirm = input(f'{DB_PATH} already exists. Do you want to recreate it? (Y/y/N/n) ')
-        try:
-            confirm = confirm.lower()
-        except Exception:
-            print('Could not understand user input: {}.'.format(confirm))
-            return
-        if confirm == 'y' or confirm == 'yes':
-            os.remove(DB_PATH)
-            should_create = True
-        else:
-            print('Did not recreate database.')
-            return
-    else:
-        should_create = True
 
-    if not should_create:
-        return
-
+def create_tables():
     conn = sqlite3.connect(DB_PATH)
-    conn.execute(
-        """
-        CREATE TABLE player (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            rating INTEGER
-        )
-        """
-    )
+    conn.execute(PLAYER_TABLE_CREATE)
     conn.close()
-    print(f'Successfully created db at {DB_PATH}')
 
 
 def insert_players(vals):
