@@ -4,15 +4,17 @@ from typing import Iterable
 
 class Circle:
     """
-    Circular queue.
-    Supports direct indexing and the ability to rotate clockwise or counterclockwise.
+    Augmented double-ended queue that supports rotation.
     """
 
-    def __init__(self, A: Iterable):
-        self.circle = deque(A or [])
+    def __init__(self, I: Iterable):
+        self.circle = deque(I or [])
 
     def __len__(self):
         return len(self.circle)
+
+    def __repr__(self):
+        return f"Circle({list(self.circle)})"
 
     def __getitem__(self, i):
         """

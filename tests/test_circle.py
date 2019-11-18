@@ -23,3 +23,12 @@ def test_rotate_counter_clockwise():
     assert circle[0] == 2
     assert circle[1] == 3
     assert circle[2] == 1
+
+
+def test_rotate_will_return_to_original():
+    circle = Circle([1, 2, 3])
+    for _ in range(len(circle)):
+        circle.rotate()
+    assert circle[0] == 1
+    assert circle[1] == 2
+    assert circle[2] == 3
