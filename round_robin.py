@@ -98,13 +98,6 @@ if __name__ == "__main__":
 
         name_and_ratings.add((name.strip(), rating))
 
-    players = []
-    for (name, rating) in name_and_ratings:
-        players.append(Player(name=name, rating=rating))
-
-    rr = round_robin(len(players))
-    for i, round in enumerate(rr, 1):
-        print(f"ROUND {i}")
-        for ((p1, p1_seed), (p2, p2_seed)) in construct_matchups(round, players):
-            print(format_matchup(p1, p1_seed, p2, p2_seed))
-        print()
+    if name_and_ratings:
+        import db
+        db.insert_players(name_and_ratings)
