@@ -1,7 +1,5 @@
 from collections import deque
-from typing import Iterable
 
-from data_structures.circle import Circle
 from models.player import Player
 
 BYE = Player(name="BYE")
@@ -23,13 +21,13 @@ def round_robin(n):
     n = n if n % 2 == 0 else n + 1
 
     # construct rotatable circle with everyone but first player
-    circle = Circle(range(2, n+1))
+    circle = deque(range(2, n+1))
 
     for _ in range(n-1):
         round = []
 
         # fix the first player in the circle
-        circle.insert_head(1)
+        circle.appendleft(1)
 
         for i in range(n//2):
             p1, p2 = circle[i], circle[n-1-i]  # play the person "opposite" of you in the circle
@@ -39,7 +37,7 @@ def round_robin(n):
         yield round
 
         # rotate everyone else but the first player
-        circle.remove_head()
+        circle.pop()
         circle.rotate()
 
 
